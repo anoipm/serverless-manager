@@ -27,4 +27,3 @@ resources:
 - ./rbac
 - ./ui-extensions
 - ./priority-class
-- ./network-policy
