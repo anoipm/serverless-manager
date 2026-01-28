@@ -21,7 +21,7 @@ jobs:
     secrets: inherit
     uses: ./.github/workflows/_integration-tests.yaml
     with:
-      image: europe-docker.pkg.dev/kyma-project/prod/serverless-operator:PR-2168
+      image: europe-docker.pkg.dev/kyma-project/dev/serverless-operator:PR-2168
 #2196
 
   upgrades:
