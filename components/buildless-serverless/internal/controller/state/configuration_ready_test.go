@@ -41,7 +41,7 @@ func Test_sFnConfigurationReady(t *testing.T) {
 		m := fsm.StateMachine{State: fsm.SystemState{
 			Function: serverlessv1alpha2.Function{
 				Spec: serverlessv1alpha2.FunctionSpec{
-					Runtime: serverlessv1alpha2.NodeJs20,
+					Runtime: serverlessv1alpha2.NodeJs22,
 				},
 			},
 		}}
@@ -62,6 +62,6 @@ func Test_sFnConfigurationReady(t *testing.T) {
 			serverlessv1alpha2.ConditionConfigurationReady,
 			metav1.ConditionTrue,
 			serverlessv1alpha2.ConditionReasonFunctionSpecValidated,
-			"Warning: function configured, runtime nodejs20 is deprecated and will be removed in the future")
+			"Warning: function configured, runtime nodejs22 is deprecated and will be removed in the future")
 	})
 }

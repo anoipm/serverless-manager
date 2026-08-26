@@ -424,11 +424,6 @@ func TestDeployment_workingSourcesDir(t *testing.T) {
 		want    string
 	}{
 		{
-			name:    "get working dir for nodejs20",
-			runtime: serverlessv1alpha2.NodeJs20,
-			want:    "/usr/src/app/function",
-		},
-		{
 			name:    "get working dir for nodejs22",
 			runtime: serverlessv1alpha2.NodeJs22,
 			want:    "/usr/src/app/function",
@@ -460,7 +455,6 @@ func TestDeployment_workingSourcesDir(t *testing.T) {
 func TestDeployment_runtimeImage(t *testing.T) {
 	c := &config.FunctionConfig{
 		Images: config.ImagesConfig{
-			NodeJs20:  "image-for-nodejs20",
 			NodeJs22:  "image-for-nodejs22",
 			NodeJs24:  "image-for-nodejs24",
 			Python312: "image-for-python312",
@@ -484,14 +478,6 @@ func TestDeployment_runtimeImage(t *testing.T) {
 			want: "image-for-python312",
 		},
 		{
-			name: "get nodejs20 image from function config",
-			fields: fields{
-				runtime:              serverlessv1alpha2.NodeJs20,
-				runtimeImageOverride: "",
-			},
-			want: "image-for-nodejs20",
-		},
-		{
 			name: "get nodejs22 image from function config",
 			fields: fields{
 				runtime:              serverlessv1alpha2.NodeJs22,
@@ -506,14 +492,6 @@ func TestDeployment_runtimeImage(t *testing.T) {
 				runtimeImageOverride: "",
 			},
 			want: "image-for-nodejs24",
-		},
-		{
-			name: "get overridden image name from function",
-			fields: fields{
-				runtime:              serverlessv1alpha2.NodeJs20,
-				runtimeImageOverride: "overridden-image",
-			},
-			want: "overridden-image",
 		},
 		{
 			name: "get overridden image name from function",
@@ -656,28 +634,6 @@ func TestDeployment_volumeMounts(t *testing.T) {
 		source  serverlessv1alpha2.Source
 		want    []corev1.VolumeMount
 	}{
-		{
-			name:    "build volume mounts for inline nodejs20 based on function",
-			runtime: serverlessv1alpha2.NodeJs20,
-			source:  serverlessv1alpha2.Source{Inline: &serverlessv1alpha2.InlineSource{Source: "x", Dependencies: "x"}},
-			want: []corev1.VolumeMount{
-				{
-					Name:      "sources",
-					MountPath: "/usr/src/app/function",
-				},
-				{
-					Name:      "tmp",
-					ReadOnly:  false,
-					MountPath: "/tmp",
-				},
-				{
-					Name:      "package-registry-config",
-					ReadOnly:  false,
-					MountPath: "/usr/src/app/function/package-registry-config/.npmrc",
-					SubPath:   ".npmrc",
-				},
-			},
-		},
 		{
 			name:    "build volume mounts for inline nodejs22 based on function",
 			runtime: serverlessv1alpha2.NodeJs22,
@@ -865,34 +821,6 @@ func TestDeployment_volumes(t *testing.T) {
 		source  serverlessv1alpha2.Source
 		want    []corev1.Volume
 	}{
-		{
-			name:    "build volumes for inline nodejs20 based on function",
-			runtime: serverlessv1alpha2.NodeJs20,
-			source:  serverlessv1alpha2.Source{Inline: &serverlessv1alpha2.InlineSource{Source: "x", Dependencies: "x"}},
-			want: []corev1.Volume{
-				{
-					Name: "sources",
-					VolumeSource: corev1.VolumeSource{
-						EmptyDir: &corev1.EmptyDirVolumeSource{},
-					},
-				},
-				{
-					Name: "package-registry-config",
-					VolumeSource: corev1.VolumeSource{
-						Secret: &corev1.SecretVolumeSource{
-							SecretName: "test-secret-name",
-							Optional:   ptr.To[bool](true),
-						},
-					},
-				},
-				{
-					Name: "tmp",
-					VolumeSource: corev1.VolumeSource{
-						EmptyDir: &corev1.EmptyDirVolumeSource{},
-					},
-				},
-			},
-		},
 		{
 			name:    "build volumes for inline nodejs22 based on function",
 			runtime: serverlessv1alpha2.NodeJs22,
@@ -1198,58 +1126,6 @@ func TestDeployment_envs(t *testing.T) {
 		fnConfig config.FunctionConfig
 		want     []corev1.EnvVar
 	}{
-		{
-			name: "build envs based on inline nodejs20 function",
-			function: &serverlessv1alpha2.Function{
-				ObjectMeta: metav1.ObjectMeta{
-					Name:      "function-name",
-					Namespace: "function-namespace",
-				},
-				Spec: serverlessv1alpha2.FunctionSpec{
-					Runtime: serverlessv1alpha2.NodeJs20,
-					Source: serverlessv1alpha2.Source{
-						Inline: &serverlessv1alpha2.InlineSource{
-							Source:       "function-source",
-							Dependencies: "function-dependencies",
-						},
-					},
-				},
-			},
-			want: []corev1.EnvVar{
-				{
-					Name:  "FUNC_NAME",
-					Value: "function-name",
-				},
-				{
-					Name:  "FUNC_RUNTIME",
-					Value: "nodejs20",
-				},
-				{
-					Name:  "SERVICE_NAMESPACE",
-					Value: "function-namespace",
-				},
-				{
-					Name:  "FUNC_HANDLER_SOURCE",
-					Value: "function-source",
-				},
-				{
-					Name:  "FUNC_HANDLER_DEPENDENCIES",
-					Value: "function-dependencies",
-				},
-				{
-					Name:  "HANDLER_PATH",
-					Value: "./function/handler.js",
-				},
-				{
-					Name:  "TRACE_COLLECTOR_ENDPOINT",
-					Value: "test-trace-collector-endpoint",
-				},
-				{
-					Name:  "PUBLISHER_PROXY_ADDRESS",
-					Value: "test-proxy-address",
-				},
-			},
-		},
 		{
 			name: "build envs based on inline nodejs22 function",
 			function: &serverlessv1alpha2.Function{
@@ -1563,69 +1439,6 @@ if [ -f "./kubeless.py" ]; then
 else
   python server.py;
 fi`,
-		},
-		{
-			name: "build runtime command for inline nodejs20 without dependencies",
-			function: &serverlessv1alpha2.Function{
-				Spec: serverlessv1alpha2.FunctionSpec{
-					Runtime: serverlessv1alpha2.NodeJs20,
-					Source: serverlessv1alpha2.Source{
-						Inline: &serverlessv1alpha2.InlineSource{
-							Source: "function-source",
-						},
-					},
-				},
-			},
-			want: `set -e;
-echo "{}" > package.json;
-echo "${FUNC_HANDLER_SOURCE}" > handler.js;
-NPM_CONFIG_USERCONFIG=package-registry-config/.npmrc npm install --prefer-offline --no-audit --progress=false;
-cd ..;
-npm start;`,
-		},
-		{
-			name: "build runtime command for inline nodejs20 with dependencies",
-			function: &serverlessv1alpha2.Function{
-				Spec: serverlessv1alpha2.FunctionSpec{
-					Runtime: serverlessv1alpha2.NodeJs20,
-					Source: serverlessv1alpha2.Source{
-						Inline: &serverlessv1alpha2.InlineSource{
-							Source:       "function-source",
-							Dependencies: "function-dependencies",
-						},
-					},
-				},
-			},
-			want: `set -e;
-echo "{}" > package.json;
-echo "${FUNC_HANDLER_SOURCE}" > handler.js;
-echo "${FUNC_HANDLER_DEPENDENCIES}" > package.json;
-NPM_CONFIG_USERCONFIG=package-registry-config/.npmrc npm install --prefer-offline --no-audit --progress=false;
-cd ..;
-npm start;`,
-		},
-		{
-			name: "build runtime command for git nodejs20",
-			function: &serverlessv1alpha2.Function{
-				Spec: serverlessv1alpha2.FunctionSpec{
-					Runtime: serverlessv1alpha2.NodeJs20,
-					Source: serverlessv1alpha2.Source{
-						GitRepository: &serverlessv1alpha2.GitRepositorySource{
-							URL: "/some/url",
-							Repository: serverlessv1alpha2.Repository{
-								BaseDir:   "/some/dir",
-								Reference: "some-reference",
-							},
-						},
-					},
-				},
-			},
-			want: `set -e;
-echo "{}" > package.json;
-cp -r /git-repository/src/* .;
-NPM_CONFIG_USERCONFIG=package-registry-config/.npmrc npm install --prefer-offline --no-audit --progress=false;
-cd ..;
-npm start;`,
 		},
 		{
 			name: "build runtime command for inline nodejs22 without dependencies",

@@ -96,11 +96,6 @@ func (b *Builder) WithImageFunctionInit(image string) *Builder {
 	return b
 }
 
-func (b *Builder) WithImageFunctionRuntimeNodejs20(image string) *Builder {
-	b.With("global.images.function_runtime_nodejs20", image)
-	return b
-}
-
 func (b *Builder) WithImageFunctionRuntimeNodejs22(image string) *Builder {
 	b.With("global.images.function_runtime_nodejs22", image)
 	return b

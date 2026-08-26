@@ -13,7 +13,6 @@ import (
 
 type FunctionConfig struct {
 	Images struct {
-		Nodejs20 string `yaml:"nodejs20"`
 		Nodejs22 string `yaml:"nodejs22"`
 		Nodejs24 string `yaml:"nodejs24"`
 	} `yaml:"images"`
