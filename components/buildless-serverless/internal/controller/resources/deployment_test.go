@@ -494,7 +494,7 @@ func TestDeployment_runtimeImage(t *testing.T) {
 			want: "image-for-nodejs24",
 		},
 		{
-			name: "get overridden image name from function",
+			name: "get overridden image name from nodejs22 function",
 			fields: fields{
 				runtime:              serverlessv1alpha2.NodeJs22,
 				runtimeImageOverride: "overridden-image",
@@ -502,7 +502,7 @@ func TestDeployment_runtimeImage(t *testing.T) {
 			want: "overridden-image",
 		},
 		{
-			name: "get overridden image name from function",
+			name: "get overridden image name from nodejs24 function",
 			fields: fields{
 				runtime:              serverlessv1alpha2.NodeJs24,
 				runtimeImageOverride: "overridden-image",
