@@ -337,13 +337,16 @@ subCommands:
         default: ""
       - type: string
         name: "version"
-        description: "specifies which version of node runtime should be used {22|24}"
+        description: "specifies which version of node runtime should be used {22 - deprecated|24}"
         shorthand: "v"
         default: "22"
       with:
         dryRun: ${{ .flags.dryrun.value }}
         output: ${{ .flags.output.value }}
         outputWarning: |-
+          ${{ if eq .flags.version.value "22" -}}
+          warning: nodejs22 is deprecated and will be removed in future releases - using newer version is recommended
+          ${{- end }}
         resource:
           apiVersion: serverless.kyma-project.io/v1alpha2
           kind: Function
