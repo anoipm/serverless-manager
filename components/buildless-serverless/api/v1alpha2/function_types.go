@@ -31,8 +31,8 @@ type Runtime string
 const (
 	PythonPrefix string  = "python"
 	NodeJsPrefix string  = "nodejs"
-	Python312 Runtime = "python312"
-	NodeJs24  Runtime = "nodejs24"
+	Python312    Runtime = "python312"
+	NodeJs24     Runtime = "nodejs24"
 	// deprecated runtimes
 	NodeJs22 Runtime = "nodejs22"
 )
