@@ -4,14 +4,19 @@ This document outlines the planned deprecation and end-of-life (EOL) dates for s
 
 ## Supported Runtimes and Deprecation Timeline
 
-| Runtime | Planned Deprecation | Estimated EOL |
-| --- | --- | --- |
-| Node.js 22 | July 2026 | November 2026 |
-| Node.js 24 | TBD | TBD |
-| Python 3.12 | September 2026 | March 2027 |
-| Python 3.14 | TBD | TBD |
+| Runtime | Planned Deprecation | Estimated EOL | Status |
+| --- | --- | --- | --- |
+| Node.js 22 | July 2026 | November 2026 | Deprecated |
+| Node.js 24 | TBD | TBD | |
+| Python 3.12 | September 2026 | March 2027 | |
+| Python 3.14 | TBD | TBD | |
 
 ## Deprecation History
+
+### Node.js 22
+- **Status**: Deprecated
+- **Deprecation Version**: v1.14.0
+- **Details**: Node.js 22 is deprecated. For more information, see [#2681](https://github.com/kyma-project/serverless/issues/2681). Migrate to Node.js 24 or newer.
 
 ### Node.js 20
 - **Status**: Removed
