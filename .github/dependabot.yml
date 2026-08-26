@@ -113,16 +113,6 @@ updates:
           - "kyma-project/restricted-prod/sap.com/python-fips"
 
   - package-ecosystem: "docker"
-    directory: "/components/runtimes/nodejs20"
-    labels:
-      - "area/dependency"
-      - "kind/chore"
-    schedule:
-      interval: "weekly"
-    commit-message:
-      prefix: "nodejs20"
-      include: "scope"
-  - package-ecosystem: "docker"
     directory: "/components/runtimes/nodejs22"
     labels:
       - "area/dependency"
@@ -221,20 +211,6 @@ updates:
         patterns:
           - "opentelemetry-*"
 
-  - package-ecosystem: "npm"
-    directory: "/components/runtimes/nodejs20"
-    labels:
-      - "area/dependency"
-      - "kind/chore"
-    schedule:
-      interval: "weekly"
-    commit-message:
-      prefix: "npm-nodejs20"
-      include: "scope"
-    groups:
-      opentelemetry:
-        patterns:
-          - "@opentelemetry/*"
   - package-ecosystem: "npm"
     directory: "/components/runtimes/nodejs22"
     labels:
