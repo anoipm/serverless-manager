@@ -18,12 +18,12 @@ details:
       source: 'spec.source.gitRepository ? "Git Repository" : "Inline Editor"'
     - name: header.runtime
       source: >-
-        spec.runtime = 'python312' ? 'Python 3.12' :  ( spec.runtime = 'python314' ? 'Python 3.14' : ( spec.runtime = 'nodejs26' ? 'Node.js 26' : ( spec.runtime = 'nodejs24' ? 'Node.js 24' : (spec.runtime = 'nodejs22' ? 'Node.js 22' : (spec.runtime = 'nodejs20' ? 'Node.js 20 - deprecated' : spec.runtime)))))
+        spec.runtime = 'python312' ? 'Python 3.12' :  ( spec.runtime = 'python314' ? 'Python 3.14' : ( spec.runtime = 'nodejs26' ? 'Node.js 26' : ( spec.runtime = 'nodejs24' ? 'Node.js 24' : (spec.runtime = 'nodejs22' ? 'Node.js 22 - deprecated' : spec.runtime))))
   body:
     - widget: Alert
       severity: warning
-      source: "'alert.nodejs20.deprecated'"
-      visibility: $boolean($contains($root.spec.runtime, "nodejs20"))
+      source: "'alert.nodejs22.deprecated'"
+      visibility: $boolean($contains($root.spec.runtime, "nodejs22"))
     - source: spec.source.inline.source
       widget: CodeViewer
       name: code.source
@@ -151,7 +151,7 @@ form:
     path: spec.runtime
     placeholder: placeholders.spec.runtime
     enum: |
-      $language = 'JavaScript' ? ['nodejs20', 'nodejs22', 'nodejs24', 'nodejs26'] :
+      $language = 'JavaScript' ? ['nodejs22', 'nodejs24', 'nodejs26'] :
       $language = 'Python' ? ['python312', 'python314'] :
       []
     subscribe:
@@ -161,8 +161,8 @@ form:
         ''
   - widget: Alert
     severity: warning
-    alert: "'alert.nodejs20.deprecated'"
-    visibility: $boolean($contains($root.spec.runtime, "nodejs20"))
+    alert: "'alert.nodejs22.deprecated'"
+    visibility: $boolean($contains($root.spec.runtime, "nodejs22"))
   - path: spec.resourceConfiguration.function.profile
     simple: true
     enum: ["XS", "S", "M", "L", "XL"]
@@ -386,7 +386,7 @@ general:
 list:
   - name: header.runtime
     source: >-
-      spec.runtime = 'python312' ? 'Python 3.12' : (spec.runtime = 'python314' ? 'Python 3.14' : (spec.runtime = 'nodejs26' ? 'Node.js 26' : (spec.runtime = 'nodejs24' ? 'Node.js 24' : (spec.runtime = 'nodejs22' ? 'Node.js 22' :(spec.runtime = 'nodejs20' ? 'Node.js 20 - deprecated' : spec.runtime)))))
+      spec.runtime = 'python312' ? 'Python 3.12' : (spec.runtime = 'python314' ? 'Python 3.14' : (spec.runtime = 'nodejs26' ? 'Node.js 26' : (spec.runtime = 'nodejs24' ? 'Node.js 24' : (spec.runtime = 'nodejs22' ? 'Node.js 22 - deprecated' : spec.runtime))))
   - name: header.sourceType
     source: 'spec.source.gitRepository ? "Git Repository" : "Inline Editor"'
   - name: header.status
@@ -492,8 +492,7 @@ translations:
     Status: Status
     Runtime: Runtime
     "Source Type": Source Type
-    spec.runtime.nodejs20: Node.js 20 - deprecated
-    spec.runtime.nodejs22: Node.js 22
+    spec.runtime.nodejs22: Node.js 22 - deprecated
     spec.runtime.nodejs24: Node.js 24
     spec.runtime.nodejs26: Node.js 26
     spec.runtime.python312: Python 3.12
@@ -506,8 +505,8 @@ translations:
     envType: Variable Type
     "Node.js Function": Node.js Function
     "Python Function": Python Function
-    alert.nodejs20.deprecated: Node.js 20 is deprecated and will be removed in future releases. Using newer version is recommended.
     alert.resources.requests: If you want to provide your own requests configuration, leave the Function profile field empty.
+    alert.nodejs22.deprecated: Node.js 22 is deprecated and will be removed in future releases. Using a newer version is recommended.
     alert.resources.limits: If you want to provide your own limits configuration, leave the Function profile field empty.
     spec.labels: Runtime Labels
     spec.annotations: Runtime Annotations
