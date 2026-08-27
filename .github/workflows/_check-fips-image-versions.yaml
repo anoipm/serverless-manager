@@ -40,7 +40,7 @@ jobs:
           }
 
           # Runtimes without a FIPS variant — must be explicitly listed here to avoid silently skipping new runtimes
-          SKIP_LIST="nodejs20 python312"
+          SKIP_LIST="python312"
 
           failed=0
           for runtime_dir in components/runtimes/*/; do
