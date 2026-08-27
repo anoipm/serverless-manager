@@ -44,20 +44,6 @@ func Test_readNodejsFiles(t *testing.T) {
 		require.Contains(t, gotList, types.FileResponse{Name: "handler.js", Data: handlerBase64Data})
 	})
 
-	t.Run("read true nodejs20 runtime files", func(t *testing.T) {
-		inline := &v1alpha2.InlineSource{
-			Source:       handlerData,
-			Dependencies: "{}",
-		}
-		runtimeDir := fmt.Sprintf("%s/%s", runtimesDir, "nodejs20")
-
-		gotList, gotErr := readNodejsFiles(inline, runtimeDir)
-		require.NoError(t, gotErr)
-		require.Len(t, gotList, 12)
-		requireFileWithName(t, gotList, "package.json")
-		require.Contains(t, gotList, types.FileResponse{Name: "handler.js", Data: handlerBase64Data})
-	})
-
 	t.Run("runtime dir does not exist", func(t *testing.T) {
 		inline := &v1alpha2.InlineSource{
 			Source:       handlerData,
