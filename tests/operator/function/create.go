@@ -24,7 +24,7 @@ func getFunction(utils *utils.TestUtils) *serverlessv1alpha2.Function {
 			Namespace: utils.Namespace,
 		},
 		Spec: serverlessv1alpha2.FunctionSpec{
-			Runtime: serverlessv1alpha2.NodeJs20,
+			Runtime: serverlessv1alpha2.NodeJs24,
 			Source: serverlessv1alpha2.Source{
 				Inline: &serverlessv1alpha2.InlineSource{
 					Source: `module.exports = { 

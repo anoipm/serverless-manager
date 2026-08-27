@@ -105,7 +105,6 @@ func FunctionTracing(restConfig *rest.Config, cfg internal.Config, logf *logrus.
 		app.NewApplication("Create HTTP basic application", HTTPAppName, HTTPAppImage, int32(80), appsCli.Deployments(genericContainer.Namespace), coreCli.Services(genericContainer.Namespace), genericContainer),
 		executor.NewParallelRunner(logf, "Fn tests",
 			newTracingPython312Runner(logf, genericContainer, poll, httpAppURL.String(), cfg.KubectlProxyEnabled),
-			newTracingNodejs20Runner(logf, genericContainer, poll, httpAppURL.String(), cfg.KubectlProxyEnabled),
 			newTracingNodejs22Runner(logf, genericContainer, poll, httpAppURL.String(), cfg.KubectlProxyEnabled),
 			newTracingNodejs24Runner(logf, genericContainer, poll, httpAppURL.String(), cfg.KubectlProxyEnabled),
 		),
@@ -119,16 +118,6 @@ func newTracingPython312Runner(logf *logrus.Entry, genericContainer utils.Contai
 	return executor.NewSerialTestRunner(python312Logger, "Python312 test",
 		function.CreateFunction(python312Logger, python312Fn, "Create Python312 Function", runtimes.BasicTracingPythonFunction(serverlessv1alpha2.Python312, httpAppURL)),
 		assertion.TracingHTTPCheck(python312Logger, "Python312 tracing headers check", python312Fn.FunctionURL, poll),
-	)
-}
-
-func newTracingNodejs20Runner(logf *logrus.Entry, genericContainer utils.Container, poll utils.Poller, httpAppURL string, kubectlProxyEnabled bool) executor.Step {
-	nodejs20Logger := logf.WithField(runtimeKey, "nodejs20")
-	nodejs20Fn := function.NewFunction("nodejs20", genericContainer.Namespace, kubectlProxyEnabled, genericContainer.WithLogger(nodejs20Logger))
-
-	return executor.NewSerialTestRunner(nodejs20Logger, "NodeJS20 test",
-		function.CreateFunction(nodejs20Logger, nodejs20Fn, "Create NodeJS20 Function", runtimes.BasicTracingNodeFunction(serverlessv1alpha2.NodeJs20, httpAppURL)),
-		assertion.TracingHTTPCheck(nodejs20Logger, "NodeJS20 tracing headers check", nodejs20Fn.FunctionURL, poll),
 	)
 }
 

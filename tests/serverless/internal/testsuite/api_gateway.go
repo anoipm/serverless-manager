@@ -19,7 +19,6 @@ import (
 )
 
 const (
-	nodejs20  = "nodejs20"
 	nodejs22  = "nodejs22"
 	nodejs24  = "nodejs24"
 	python312 = "python312"
@@ -72,7 +71,6 @@ func FunctionAPIGateway(restConfig *rest.Config, cfg internal.Config, logf *logr
 	}
 
 	python312Logger := logf.WithField(runtimeKey, "python312")
-	nodejs20Logger := logf.WithField(runtimeKey, "nodejs20")
 	nodejs22Logger := logf.WithField(runtimeKey, "nodejs22")
 	nodejs24Logger := logf.WithField(runtimeKey, "nodejs24")
 
@@ -82,7 +80,6 @@ func FunctionAPIGateway(restConfig *rest.Config, cfg internal.Config, logf *logr
 	}
 
 	python312Fn := function.NewFunction("python312", genericContainer.Namespace, cfg.KubectlProxyEnabled, genericContainer.WithLogger(python312Logger))
-	nodejs20Fn := function.NewFunction("nodejs20", genericContainer.Namespace, cfg.KubectlProxyEnabled, genericContainer.WithLogger(nodejs20Logger))
 	nodejs22Fn := function.NewFunction("nodejs22", genericContainer.Namespace, cfg.KubectlProxyEnabled, genericContainer.WithLogger(nodejs22Logger))
 	nodejs24Fn := function.NewFunction("nodejs24", genericContainer.Namespace, cfg.KubectlProxyEnabled, genericContainer.WithLogger(nodejs24Logger))
 
@@ -94,10 +91,6 @@ func FunctionAPIGateway(restConfig *rest.Config, cfg internal.Config, logf *logr
 			executor.NewSerialTestRunner(python312Logger, "Python312 test",
 				function.CreateFunction(python312Logger, python312Fn, "Create Python312 Function", runtimes.BasicPythonFunction("Hello from python312", serverlessv1alpha2.Python312)),
 				assertion.APIGatewayFunctionCheck("python312", python312Fn, coreCli, genericContainer.Namespace, python312),
-			),
-			executor.NewSerialTestRunner(nodejs20Logger, "NodeJS20 test",
-				function.CreateFunction(nodejs20Logger, nodejs20Fn, "Create NodeJS20 Function", runtimes.BasicNodeJSFunction("Hello from nodejs20", serverlessv1alpha2.NodeJs20)),
-				assertion.APIGatewayFunctionCheck("nodejs20", nodejs20Fn, coreCli, genericContainer.Namespace, nodejs20),
 			),
 			executor.NewSerialTestRunner(nodejs22Logger, "NodeJS22 test",
 				function.CreateFunction(nodejs22Logger, nodejs22Fn, "Create NodeJS22 Function", runtimes.BasicNodeJSFunction("Hello from nodejs22", serverlessv1alpha2.NodeJs22)),

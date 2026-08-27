@@ -66,7 +66,6 @@ func SimpleFunction(restConfig *rest.Config, cfg internal.Config, logf *logrus.E
 		newRegistryConfigSecretStep(logf, genericContainer, cfg),
 		executor.NewParallelRunner(logf, "Fn tests",
 			newSimplePython312TestRunner(logf, poll, genericContainer, cfg.KubectlProxyEnabled),
-			newSimpleNodejs20TestRunner(logf, poll, genericContainer, cfg.KubectlProxyEnabled),
 			newSimpleNodejs22TestRunner(logf, poll, genericContainer, cfg.KubectlProxyEnabled),
 			newSimpleNodejs24TestRunner(logf, poll, genericContainer, cfg.KubectlProxyEnabled),
 		),
@@ -127,22 +126,6 @@ func newRegistryConfigSecretStep(logf *logrus.Entry, genericContainer utils.Cont
 	}
 
 	return secret.CreateSecret(logf, pkgCfgSecret, "Create package configuration secret", pkgCfgSecretData)
-}
-
-func newSimpleNodejs20TestRunner(logf *logrus.Entry, poll utils.Poller, genericContainer utils.Container, kubectlProxyEnabled bool) *executor.SerialRunner {
-	nodejs20Logger := logf.WithField(runtimeKey, "nodejs20")
-	nodejs20Fn := function.NewFunction("nodejs20", genericContainer.Namespace, kubectlProxyEnabled, genericContainer.WithLogger(nodejs20Logger))
-	cmNodeJS20 := configmap.NewConfigMap("test-serverless-configmap-nodejs20", genericContainer.WithLogger(nodejs20Logger))
-	secNodeJS20 := secret.NewSecret("test-serverless-secret-nodejs20", genericContainer.WithLogger(nodejs20Logger))
-
-	return executor.NewSerialTestRunner(nodejs20Logger, "NodeJS20 test",
-		configmap.CreateConfigMap(nodejs20Logger, cmNodeJS20, "Create Test ConfigMap", cmData),
-		secret.CreateSecret(nodejs20Logger, secNodeJS20, "Create Test Secret", secretData),
-		function.CreateFunction(nodejs20Logger, nodejs20Fn, "Create NodeJS20 Function", runtimes.NodeJSFunctionWithEnvFromConfigMapAndSecret(cmNodeJS20.Name(), cmEnvKey, secNodeJS20.Name(), secEnvKey, serverlessv1alpha2.NodeJs20)),
-		assertion.NewHTTPCheck(nodejs20Logger, "NodeJS20 pre update simple check through service", nodejs20Fn.FunctionURL, poll, fmt.Sprintf("%s-%s", cmEnvValue, secEnvValue)),
-		function.UpdateFunction(nodejs20Logger, nodejs20Fn, "Update NodeJS20 Function", runtimes.BasicNodeJSFunctionWithCustomDependency("Hello from updated nodejs20", serverlessv1alpha2.NodeJs20)),
-		assertion.NewHTTPCheck(nodejs20Logger, "NodeJS20 post update simple check through service", nodejs20Fn.FunctionURL, poll, "Hello from updated nodejs20"),
-	)
 }
 
 func newSimpleNodejs22TestRunner(logf *logrus.Entry, poll utils.Poller, genericContainer utils.Container, kubectlProxyEnabled bool) *executor.SerialRunner {

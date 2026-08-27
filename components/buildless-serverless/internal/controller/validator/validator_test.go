@@ -206,7 +206,7 @@ func Test_functionValidator_validateRuntime(t *testing.T) {
 			},
 		},
 	}
-	for _, runtime := range []serverlessv1alpha2.Runtime{serverlessv1alpha2.NodeJs20, serverlessv1alpha2.NodeJs22, serverlessv1alpha2.NodeJs24, serverlessv1alpha2.Python312} {
+	for _, runtime := range []serverlessv1alpha2.Runtime{serverlessv1alpha2.NodeJs22, serverlessv1alpha2.NodeJs24, serverlessv1alpha2.Python312} {
 		tests = append(tests, testData{
 			name:    fmt.Sprintf("when %s then no errors", runtime),
 			runtime: runtime,
@@ -493,13 +493,6 @@ func Test_validator_validateFips(t *testing.T) {
 			URL:      urlAllowedInFips,
 			runtime:  serverlessv1alpha2.Python312,
 			want:     []string{"runtime python312 is not allowed in FIPS mode"},
-		},
-		{
-			name:     "FIPS enabled with Node.js 20 runtime should return error",
-			fipsMode: true,
-			URL:      urlAllowedInFips,
-			runtime:  serverlessv1alpha2.NodeJs20,
-			want:     []string{"runtime nodejs20 is not allowed in FIPS mode"},
 		},
 		{
 			name:     "FIPS enabled with Node.js 22 runtime should return no errors",

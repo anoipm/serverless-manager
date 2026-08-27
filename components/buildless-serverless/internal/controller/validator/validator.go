@@ -164,9 +164,6 @@ func (v *validator) validateFips() []string {
 	if err := validatePython312OrOlderIsForbiddenInFipsMode(v.instance.Spec.Runtime); err != nil {
 		result = append(result, err.Error())
 	}
-	if err := validateNodejs20OrOlderIsForbiddenInFipsMode(v.instance.Spec.Runtime); err != nil {
-		result = append(result, err.Error())
-	}
 	return result
 }
 
@@ -256,13 +253,6 @@ func validateSshGitIsForbiddenInFipsMode(gitRepo *serverlessv1alpha2.GitReposito
 
 func validatePython312OrOlderIsForbiddenInFipsMode(runtime serverlessv1alpha2.Runtime) error {
 	if runtime == serverlessv1alpha2.Python312 {
-		return fmt.Errorf("runtime %s is not allowed in FIPS mode", runtime)
-	}
-	return nil
-}
-
-func validateNodejs20OrOlderIsForbiddenInFipsMode(runtime serverlessv1alpha2.Runtime) error {
-	if runtime == serverlessv1alpha2.NodeJs20 {
 		return fmt.Errorf("runtime %s is not allowed in FIPS mode", runtime)
 	}
 	return nil
